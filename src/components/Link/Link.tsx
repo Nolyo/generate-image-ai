@@ -7,16 +7,22 @@ type LinkProps = {
   children?: React.ReactNode
   target?: string
   className?: string
+  type?: string
 }
 const Link = ({
   href = '#',
   children,
   text,
   target = 'self',
-  className
+  className,
+  type = 'link'
 }: LinkProps) => {
   return (
-    <a href={href} className={classNames('link', className)} target={target}>
+    <a
+      href={href}
+      className={classNames(type === 'link' ? 'link' : 'button', className)}
+      target={target}
+    >
       {text && text}
       {children && children}
     </a>

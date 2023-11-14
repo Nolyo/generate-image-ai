@@ -1,10 +1,11 @@
 import { useRouteError } from 'react-router-dom'
-import LinkButton from 'components/Link/LinkButton'
+import Link from 'components/Link/Link'
 
 export default function ErrorPage() {
   // eslint-disable-next-line @typescript-eslint/ban-ts-comment
   // @ts-expect-error
   const error: { statusText?: string; message?: string } = useRouteError()
+
   console.error(error)
 
   return (
@@ -14,7 +15,7 @@ export default function ErrorPage() {
       <p>
         <i>{error.statusText || error.message}</i>
       </p>
-      <LinkButton href="/" text="Go back home" className="mt-5" />
+      <Link href="/" text="Go back home" className="mt-5" type="button" />
     </div>
   )
 }
