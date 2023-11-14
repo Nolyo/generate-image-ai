@@ -1,0 +1,54 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer components {
+  body {
+    @apply
+    antialiased
+    bg-gray-950
+    text-white
+  }
+  .container {
+    @apply
+    mx-auto px-4
+    max-w-7xl
+    sm:px-6 lg:px-8
+    flex flex-col
+    items-center justify-center
+  }
+
+  .container-v {
+    @apply
+    container
+    h-screen
+  }
+}
+
+.button {
+  @apply
+  inline-block
+  text-center font-medium text-white
+  rounded-md border border-transparent
+  px-8 py-3
+  bg-indigo-600
+  hover:bg-indigo-700
+  focus:outline-none focus:ring-2 focus:ring-indigo-700 focus:ring-offset-2
+}
+
+.link {
+  @apply
+  text-indigo-600 font-medium underline
+}
+
+.input {
+  @apply
+  block w-full
+  border-gray-300 border rounded-md
+  shadow-sm
+  focus:ring-indigo-500 focus:border-indigo-500
+  sm:text-sm
+  px-3 py-2
+  dark:text-black
+}
+
