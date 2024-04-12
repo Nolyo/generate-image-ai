@@ -3,11 +3,17 @@ import { createBrowserRouter } from 'react-router-dom'
 import ErrorPage from 'pages/error-page'
 import ImagePage from 'pages/image-page/Image-page'
 import App from 'components/App'
+import Auth from 'pages/auth'
+
+// get local storage
+const isAuth =
+  window.localStorage.getItem('password') ===
+  import.meta.env.VITE_PASSWORD_FRONT
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: <ImagePage />,
+    element: isAuth ? <ImagePage /> : <Auth />,
     errorElement: <ErrorPage />
   },
   {

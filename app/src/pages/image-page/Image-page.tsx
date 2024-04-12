@@ -6,14 +6,13 @@ import logo from 'assets/logo.svg'
 import Avatar from 'components/Avatar'
 import Input from 'components/Input/Input'
 import Form, { FORM_ERROR } from 'components/Form/Form'
-import * as process from 'process'
 
 const Schema = z.object({
-  prompt: z.string().min(3, 'Too Short!').max(200, 'Too Long!')
+  prompt: z.string().min(3, 'Too Short!').max(1000, 'Too Long!')
 })
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
   dangerouslyAllowBrowser: true
 })
 
