@@ -6,7 +6,7 @@ services: # Définit les services (conteneurs) à créer
       - .env
     build: . # Construit l'image Docker à partir du Dockerfile dans le répertoire courant
     ports: # Expose les ports du conteneur
-      - "3000:3000" # Redirige le port 3000 de l'hôte vers le port 5173 (port de react vite) du conteneur
+      - "3004:3000" # Redirige le port 3000 de l'hôte vers le port 5173 (port de react vite) du conteneur
     volumes: # Montage des volumes
       - "./app:/app" # Montage du répertoire ./app de l'hôte vers le répertoire /app du conteneur
       - "/app/node_modules" # Montage du répertoire /app/node_modules à partir du conteneur
