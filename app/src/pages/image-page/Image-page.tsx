@@ -8,7 +8,7 @@ import Input from 'components/Input/Input'
 import Form, { FORM_ERROR } from 'components/Form/Form'
 
 const Schema = z.object({
-  prompt: z.string().min(3, 'Too Short!').max(1000, 'Too Long!')
+  prompt: z.string().min(3, 'Too Short!')
 })
 
 const openai = new OpenAI({
