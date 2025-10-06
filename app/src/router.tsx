@@ -1,28 +1,47 @@
 import * as React from 'react'
-import { createBrowserRouter } from 'react-router-dom'
+import { createBrowserRouter, Navigate } from 'react-router-dom'
 import ErrorPage from 'pages/error-page'
 import ImagePage from 'pages/image-page/Image-page'
 import App from 'components/App'
 import Auth from 'pages/auth'
 
-// Vérifie la session côté serveur
-async function checkSession(): Promise<boolean> {
-  try {
-    const res = await fetch('/api/session', { credentials: 'include' })
-    if (!res.ok) return false
-    const data = (await res.json()) as { authenticated: boolean }
-    return !!data?.authenticated
-  } catch {
-    return false
-  }
-}
+// Composant qui gère la protection de route
+function ProtectedRoute() {
+  const [isAuth, setIsAuth] = React.useState<boolean | null>(null)
 
-const isAuth = await checkSession()
+  React.useEffect(() => {
+    async function checkSession() {
+      try {
+        const res = await fetch('/api/session', { credentials: 'include' })
+        if (!res.ok) {
+          setIsAuth(false)
+          return
+        }
+        const data = (await res.json()) as { authenticated: boolean }
+        setIsAuth(!!data?.authenticated)
+      } catch {
+        setIsAuth(false)
+      }
+    }
+    checkSession()
+  }, [])
+
+  if (isAuth === null) {
+    return <div>Loading...</div>
+  }
+
+  return isAuth ? <ImagePage /> : <Navigate to="/auth" replace />
+}
 
 const router = createBrowserRouter([
   {
     path: '/',
-    element: isAuth ? <ImagePage /> : <Auth />,
+    element: <ProtectedRoute />,
+    errorElement: <ErrorPage />
+  },
+  {
+    path: '/auth',
+    element: <Auth />,
     errorElement: <ErrorPage />
   },
   {
