@@ -13,8 +13,9 @@
     "email": "joaopaulomoraes@outlook.com"
   },
   "scripts": {
-    "dev": "vite --host --port 3000",
+    "dev": "concurrently -k -n server,client -c blue,green \"node server/index.js\" \"vite --host --port 3000\"",
     "build": "tsc && vite build",
+    "start": "NODE_ENV=production node server/index.js",
     "serve": "vite preview",
     "test": "vitest",
     "test:ui": "vitest --ui",
@@ -22,8 +23,12 @@
     "typecheck": "tsc --project tsconfig.json --noEmit"
   },
   "dependencies": {
+    "cookie-parser": "^1.4.7",
+    "cors": "^2.8.5",
     "dotenv": "^16.3.1",
+    "express": "^5.1.0",
     "formik": "^2.4.5",
+    "jsonwebtoken": "^9.0.2",
     "localforage": "^1.10.0",
     "match-sorter": "^6.3.1",
     "openai": "^4.17.4",
@@ -45,6 +50,7 @@
     "@vitejs/plugin-react-swc": "^3.4.1",
     "@vitest/ui": "^0.34.6",
     "autoprefixer": "^10.4.16",
+    "concurrently": "^9.2.0",
     "eslint": "^8.53.0",
     "eslint-config-prettier": "^9.0.0",
     "eslint-plugin-prettier": "^5.0.1",

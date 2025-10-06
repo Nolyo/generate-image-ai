@@ -1,5 +1,5 @@
 import { z } from 'zod'
-import OpenAI from 'openai'
+// Appels OpenAI déplacés côté serveur
 import { useEffect, useState } from 'react'
 
 import logo from 'assets/logo.svg'
@@ -11,10 +11,7 @@ const Schema = z.object({
   prompt: z.string().min(3, 'Too Short!')
 })
 
-const openai = new OpenAI({
-  apiKey: import.meta.env.VITE_OPENAI_API_KEY,
-  dangerouslyAllowBrowser: true
-})
+// Plus d'initialisation du SDK OpenAI dans le navigateur
 
 const ImagePage = () => {
   const [image_url, setImageUrl] = useState<string | null>()
@@ -60,15 +57,23 @@ const ImagePage = () => {
                 setLoading(true)
                 setImageUrl(null)
                 setRevisedPrompt(null)
-                const image = await openai.images.generate({
-                  model: 'dall-e-3',
-                  prompt: values.prompt,
-                  size: '1024x1024'
+                const response = await fetch('/api/images', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify({
+                    prompt: values.prompt,
+                    size: '1024x1024'
+                  }),
+                  credentials: 'include'
                 })
-                if (image?.data.length > 0) {
-                  setImageUrl(image.data[0].url as string)
-                  setRevisedPrompt(image.data[0].revised_prompt as string)
+                if (!response.ok) {
+                  const err = await response.json().catch(() => ({}))
+                  throw new Error(err?.error || 'Erreur serveur')
                 }
+                const data: { url: string; revised_prompt?: string | null } =
+                  await response.json()
+                setImageUrl(data.url)
+                setRevisedPrompt(data.revised_prompt || null)
               } catch (error: any) {
                 return { [FORM_ERROR]: error.toString() }
               } finally {

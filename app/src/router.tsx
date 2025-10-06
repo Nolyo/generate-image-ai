@@ -5,10 +5,19 @@ import ImagePage from 'pages/image-page/Image-page'
 import App from 'components/App'
 import Auth from 'pages/auth'
 
-// get local storage
-const isAuth =
-  window.localStorage.getItem('password') ===
-  import.meta.env.VITE_PASSWORD_FRONT
+// Vérifie la session côté serveur
+async function checkSession(): Promise<boolean> {
+  try {
+    const res = await fetch('/api/session', { credentials: 'include' })
+    if (!res.ok) return false
+    const data = (await res.json()) as { authenticated: boolean }
+    return !!data?.authenticated
+  } catch {
+    return false
+  }
+}
+
+const isAuth = await checkSession()
 
 const router = createBrowserRouter([
   {

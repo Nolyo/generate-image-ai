@@ -1,22 +1,50 @@
 # Dockerfile
 
-# Utilise l'image Docker officielle pour Node.js version 18 comme base
-FROM node:18
+# Build stage
+FROM node:18 AS builder
 
-# Définit le répertoire de travail dans le conteneur
 WORKDIR /app
 
-# Copie les fichiers package.json et package-lock.json (si disponible) dans le répertoire de travail du conteneur
+# Copy package files
 COPY ./app/package*.json ./
 
-# Installe les dépendances du projet à l'aide de npm
-RUN npm install
+# Install pnpm
+RUN npm i -g pnpm
 
-# Copie le reste des fichiers de l'application dans le répertoire de travail du conteneur
+# Install all dependencies (including devDependencies for build)
+RUN pnpm install --prod=false
+
+# Copy application files
 COPY ./app/ .
 
-# Expose le port 5173 pour que l'application puisse communiquer avec l'extérieur du conteneur
-EXPOSE 5173
+# Build the React application
+RUN pnpm run build
 
-# Exécute la commande "npm run dev" lorsque le conteneur est démarré
-CMD ["npm", "run", "dev"]
+# Production stage
+FROM node:18-slim
+
+WORKDIR /app
+
+# Copy package files
+COPY ./app/package*.json ./
+
+# Install pnpm
+RUN npm i -g pnpm
+
+# Install only production dependencies
+RUN pnpm install --prod
+
+# Copy server files
+COPY ./app/server ./server
+
+# Copy built React app from builder stage
+COPY --from=builder /app/dist ./dist
+
+# Expose port 3001 (Express server)
+EXPOSE 3001
+
+# Set NODE_ENV to production
+ENV NODE_ENV=production
+
+# Start the Express server
+CMD ["pnpm", "start"]

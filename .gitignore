@@ -1,1 +1,11 @@
 .env
+
+# dependencies
+node_modules/
+**/node_modules/
+.pnpm-store/
+**/.pnpm-store/
+
+# IDE
+.idea/
+.vscode/
