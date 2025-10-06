@@ -129,7 +129,12 @@ app.post('/api/images', requireAuth, async (req, res) => {
 
 // Serve React app for all non-API routes in production
 if (process.env.NODE_ENV === 'production') {
-    app.get('/*', (_req, res) => {
+    app.use((req, res, next) => {
+        // Skip API routes
+        if (req.path.startsWith('/api')) {
+            return next()
+        }
+        // Serve index.html for all other routes
         res.sendFile(path.join(__dirname, '../dist/index.html'))
     })
 }
